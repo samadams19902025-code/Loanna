@@ -1,1 +1,706 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Loanna — Bakery &amp; Patisserie in Leipzig</title>
+<meta name="description" content="Artisan bakery and patisserie in Leipzig. Handmade croissants, cakes, and pastries. Fresh every morning.">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Loanna — Bakery &amp; Patisserie in Leipzig">
+<meta property="og:description" content="Artisan bakery and patisserie in Leipzig. Handmade croissants, cakes, and pastries. Fresh every morning.">
+<meta property="og:image" content="assets/cake-green.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500;1,600&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --black:#0E0C0A;
+    --espresso:#1A1612;
+    --gold:#C5A97E;
+    --gold-soft:rgba(197,169,126,.5);
+    --cream:#F5F0E8;
+    --blush:#C4A99A;
+    --char:#8A837A;
+    --serif:'Cormorant Garamond', Georgia, serif;
+    --sans:'Jost', system-ui, sans-serif;
+  }
 
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:var(--black);
+    color:var(--cream);
+    font-family:var(--sans);
+    font-weight:300;
+    line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
+  }
+  ::selection{background:var(--gold);color:var(--black);}
+  img,video{display:block;max-width:100%;}
+  a{color:inherit;text-decoration:none;}
+
+  /* ---------- shared type ---------- */
+  .eyebrow{
+    font-family:var(--sans);
+    font-size:12px;
+    font-weight:400;
+    letter-spacing:.42em;
+    text-transform:uppercase;
+    color:var(--gold);
+  }
+  .rule{
+    width:62px;height:1px;border:0;margin:0;
+    background:linear-gradient(90deg,transparent,var(--gold),transparent);
+  }
+  .display{
+    font-family:var(--serif);
+    font-weight:400;
+    line-height:1;
+    letter-spacing:.01em;
+  }
+
+  /* ---------- fixed wordmark ---------- */
+  .wordmark{
+    position:fixed;top:26px;left:36px;z-index:60;
+    font-family:var(--serif);
+    font-size:26px;font-weight:500;letter-spacing:.34em;
+    color:var(--cream);
+    opacity:0;transform:translateY(-6px);
+    transition:opacity .7s ease, transform .7s ease;
+    pointer-events:none;
+    padding-left:.34em;
+  }
+  .wordmark.show{opacity:1;transform:none;pointer-events:auto;}
+  .wordmark:hover{color:var(--gold);}
+
+  /* ---------- language switch ---------- */
+  .langswitch{
+    position:fixed;top:23px;right:34px;z-index:62;
+    display:flex;align-items:center;gap:11px;
+  }
+  .lang-btn{
+    appearance:none;-webkit-appearance:none;background:none;border:0;cursor:pointer;
+    font-family:var(--sans);font-size:12px;font-weight:400;
+    letter-spacing:.3em;text-transform:uppercase;color:var(--char);
+    padding:14px 1px;min-height:44px;line-height:1;
+    padding-left:.3em;position:relative;transition:color .45s ease;
+  }
+  .lang-btn::after{
+    content:"";position:absolute;left:0;right:.3em;bottom:11px;height:1px;
+    background:var(--gold);transform:scaleX(0);transform-origin:center;
+    transition:transform .55s cubic-bezier(.2,.7,.2,1);
+  }
+  .lang-btn:hover{color:var(--cream);}
+  .lang-btn.is-active{color:var(--cream);}
+  .lang-btn.is-active::after{transform:scaleX(1);}
+  .lang-div{width:1px;height:12px;background:var(--gold-soft);}
+
+  /* ---------- hero ---------- */
+  .hero{
+    position:relative;
+    height:100svh;min-height:620px;
+    display:flex;flex-direction:column;
+    align-items:center;justify-content:center;
+    text-align:center;
+    overflow:hidden;
+  }
+  .hero__bg{
+    position:absolute;inset:-8% 0 0 0;
+    height:116%;width:100%;
+    object-fit:cover;object-position:center 45%;
+    filter:brightness(.86) contrast(1.08) saturate(.92);
+    will-change:transform;
+    z-index:0;
+  }
+  .hero__scrim{
+    position:absolute;inset:0;z-index:1;
+    background:
+      radial-gradient(125% 95% at 50% 44%, transparent 0%, rgba(14,12,10,.28) 55%, rgba(14,12,10,.86) 100%),
+      linear-gradient(180deg, rgba(14,12,10,.74) 0%, rgba(14,12,10,.20) 32%, rgba(14,12,10,.26) 62%, rgba(14,12,10,.9) 100%);
+  }
+  .hero__inner{position:relative;z-index:2;padding:0 24px;display:flex;flex-direction:column;align-items:center;}
+  .hero__name{
+    font-size:clamp(76px,17vw,210px);
+    letter-spacing:.16em;
+    font-weight:400;
+    text-indent:.16em;
+    text-shadow:0 2px 60px rgba(0,0,0,.55);
+  }
+  .hero__rule{margin:30px 0 22px;}
+  .hero__meta{
+    font-size:clamp(11px,1.1vw,13px);
+    letter-spacing:.52em;
+    text-transform:uppercase;
+    color:var(--gold);
+    font-weight:400;
+    padding-left:.52em;
+  }
+  .hero__seal{
+    margin-top:30px;
+    font-size:11px;letter-spacing:.28em;text-transform:uppercase;
+    color:var(--blush);
+    display:flex;align-items:center;gap:.7em;
+  }
+  .hero__seal .star{color:var(--gold);font-size:13px;}
+  .hero__cta{
+    position:absolute;bottom:38px;left:50%;transform:translateX(-50%);
+    z-index:2;
+    font-size:12px;letter-spacing:.4em;text-transform:uppercase;
+    color:var(--cream);
+    padding:10px 14px 14px;
+    min-height:44px;display:flex;align-items:center;gap:.6em;
+    white-space:nowrap;
+  }
+  .hero__cta .arrow{display:inline-block;transition:transform .6s ease;color:var(--gold);}
+  .hero__cta:hover .arrow{transform:translateY(5px);}
+  .hero__cta span:first-child{position:relative;}
+  .hero__cta span:first-child::after{
+    content:"";position:absolute;left:0;bottom:-3px;width:100%;height:1px;
+    background:var(--gold);transform:scaleX(0);transform-origin:left;transition:transform .5s ease;
+  }
+  .hero__cta:hover span:first-child::after{transform:scaleX(1);}
+
+  /* ---------- layout primitives ---------- */
+  section{position:relative;}
+  .wrap{max-width:1240px;margin:0 auto;padding:0 36px;}
+  .pad{padding:clamp(96px,15vh,180px) 0;}
+
+  /* ---------- founder ---------- */
+  .founder{
+    display:grid;grid-template-columns:1fr 1fr;gap:clamp(40px,7vw,110px);
+    align-items:center;
+  }
+  .founder__media{position:relative;}
+  .founder__media video{
+    width:100%;aspect-ratio:9/13;object-fit:cover;object-position:center;
+    filter:brightness(.86) contrast(1.05) saturate(.9);
+    background:var(--black);
+    -webkit-mask:
+      linear-gradient(to right, transparent 0%, #000 13%, #000 72%, transparent 100%),
+      linear-gradient(to bottom, transparent 0%, #000 12%, #000 88%, transparent 100%);
+    -webkit-mask-composite:source-in;
+    mask:
+      linear-gradient(to right, transparent 0%, #000 13%, #000 72%, transparent 100%),
+      linear-gradient(to bottom, transparent 0%, #000 12%, #000 88%, transparent 100%);
+    mask-composite:intersect;
+  }
+  .founder__media::after{
+    content:"";position:absolute;inset:0;pointer-events:none;
+    background:linear-gradient(105deg, transparent 38%, rgba(14,12,10,.55) 78%, var(--black) 100%);
+  }
+  .frame{position:relative;}
+  .frame::after{
+    content:"";position:absolute;inset:0;pointer-events:none;
+    box-shadow:inset 0 0 0 1px var(--gold-soft), inset 0 0 90px 12px rgba(14,12,10,.6);
+  }
+  .frame__tag{
+    position:absolute;left:13%;bottom:15%;z-index:2;
+    font-family:var(--serif);font-style:italic;font-size:19px;color:var(--gold);
+    letter-spacing:.02em;text-shadow:0 1px 16px rgba(0,0,0,.9);
+  }
+  .founder__body .eyebrow{display:block;margin-bottom:26px;}
+  .founder__title{font-size:clamp(40px,5vw,64px);margin:0 0 30px;color:var(--cream);}
+  .founder__title em{font-style:italic;color:var(--gold);}
+  .prose p{
+    font-family:var(--serif);
+    font-size:clamp(18px,1.4vw,21px);
+    line-height:1.72;color:var(--cream);
+    margin:0 0 20px;font-weight:400;
+    text-wrap:pretty;
+  }
+  .prose p:last-child{margin-bottom:0;color:var(--gold);font-style:italic;}
+
+  /* ---------- vitrine gallery ---------- */
+  .vitrine__head{text-align:center;margin-bottom:clamp(48px,7vh,86px);}
+  .vitrine__head .eyebrow{display:block;margin-bottom:20px;}
+  .vitrine__title{font-size:clamp(54px,9vw,128px);font-style:italic;color:var(--cream);}
+  .gallery{display:flex;flex-direction:column;gap:clamp(26px,4vw,58px);}
+  .grow{display:grid;gap:clamp(16px,2vw,30px);align-items:start;}
+  .row-a{grid-template-columns:5fr 7fr;}
+  .row-b{grid-template-columns:repeat(3,1fr);}
+  .row-c{grid-template-columns:7fr 5fr;}
+  .nudge{margin-top:clamp(26px,5vw,76px);}
+  .nudge-lg{margin-top:clamp(46px,9vw,128px);}
+  .tile{position:relative;overflow:hidden;background:var(--espresso);}
+  .ar34{aspect-ratio:3/4;}
+  .ar45{aspect-ratio:4/5;}
+  .ar1610{aspect-ratio:16/10;}
+  .ar811{aspect-ratio:8/11;}
+  .tile img,.tile video{
+    width:100%;height:100%;object-fit:cover;
+    filter:brightness(.86) contrast(1.05) saturate(.94);
+    transition:transform 1.1s cubic-bezier(.2,.7,.2,1), filter .9s ease;
+  }
+  .tile:hover img,.tile:hover video{transform:scale(1.045);filter:brightness(.97) contrast(1.06) saturate(1);}
+  .tile::after{
+    content:"";position:absolute;inset:0;pointer-events:none;
+    background:linear-gradient(180deg,transparent 50%,rgba(14,12,10,.62) 100%);
+  }
+  .tile .cap{
+    position:absolute;left:20px;bottom:16px;z-index:2;
+    font-family:var(--serif);font-style:italic;
+    font-size:clamp(17px,1.5vw,22px);color:var(--gold);
+    letter-spacing:.015em;text-shadow:0 1px 14px rgba(0,0,0,.9);
+  }
+
+  .vitrine__note{
+    text-align:center;margin-top:clamp(46px,7vh,80px);
+    font-family:var(--serif);font-style:italic;
+    font-size:clamp(19px,1.7vw,25px);color:var(--char);
+  }
+  .vitrine__note a{color:var(--gold);position:relative;}
+  .ulink{position:relative;}
+  .ulink::after{
+    content:"";position:absolute;left:0;bottom:-2px;width:100%;height:1px;
+    background:var(--gold);transform:scaleX(0);transform-origin:left;transition:transform .45s ease;
+  }
+  .ulink:hover::after{transform:scaleX(1);}
+
+  /* ---------- film interlude ---------- */
+  .film{
+    position:relative;height:88vh;min-height:560px;overflow:hidden;
+    display:flex;align-items:center;justify-content:center;
+    background:#000;
+  }
+  .film video{
+    position:absolute;inset:0;width:100%;height:100%;object-fit:cover;
+    filter:brightness(.6) contrast(1.05) saturate(.85);
+  }
+  .film__scrim{position:absolute;inset:0;background:radial-gradient(110% 100% at 50% 50%,transparent 30%,rgba(14,12,10,.85) 100%);}
+  .film__cap{
+    position:relative;z-index:2;text-align:center;padding:0 24px;
+  }
+  .film__cap .eyebrow{display:block;margin-bottom:18px;}
+  .film__cap p{
+    font-family:var(--serif);font-style:italic;
+    font-size:clamp(30px,4.4vw,62px);color:var(--cream);margin:0;line-height:1.15;
+    text-shadow:0 2px 40px rgba(0,0,0,.6);
+  }
+
+  /* ---------- craft ---------- */
+  .craft{text-align:center;}
+  .craft__lines{
+    font-family:var(--serif);
+    font-size:clamp(40px,7vw,92px);
+    line-height:1.18;color:var(--gold);font-weight:400;
+    letter-spacing:.01em;
+  }
+
+  /* ---------- reviews ---------- */
+  .reviews .eyebrow{display:block;text-align:center;margin-bottom:clamp(40px,6vh,70px);}
+  .rev-track{
+    display:flex;gap:clamp(48px,7vw,120px);
+    overflow-x:auto;scroll-snap-type:x mandatory;
+    padding:0 36px 30px;
+    scrollbar-width:none;-ms-overflow-style:none;
+  }
+  .rev-track::-webkit-scrollbar{display:none;}
+  .quote{
+    flex:0 0 min(620px,82vw);scroll-snap-align:center;
+    display:flex;flex-direction:column;justify-content:center;
+  }
+  .quote p{
+    font-family:var(--serif);font-style:italic;font-weight:400;
+    font-size:clamp(26px,2.6vw,38px);line-height:1.4;color:var(--cream);
+    margin:0 0 28px;text-wrap:pretty;
+  }
+  .quote .mark{color:var(--gold);font-family:var(--serif);font-size:1.1em;}
+  .quote .who{
+    font-family:var(--sans);font-size:12px;letter-spacing:.34em;
+    text-transform:uppercase;color:var(--gold);padding-left:.34em;
+  }
+  .rev-hint{
+    text-align:center;margin-top:14px;
+    font-size:11px;letter-spacing:.34em;text-transform:uppercase;color:var(--char);
+  }
+
+  /* ---------- visit ---------- */
+  .visit{text-align:center;}
+  .visit .eyebrow{display:block;margin-bottom:34px;}
+  .visit__name{font-size:clamp(40px,5.5vw,76px);color:var(--cream);margin-bottom:40px;}
+  .visit__grid{
+    display:flex;flex-direction:column;gap:30px;align-items:center;
+    font-family:var(--serif);font-size:clamp(20px,1.7vw,26px);
+    color:var(--cream);font-weight:400;
+  }
+  .visit__grid .lbl{
+    display:block;font-family:var(--sans);font-size:11px;letter-spacing:.36em;
+    text-transform:uppercase;color:var(--gold);margin-bottom:9px;font-weight:400;
+  }
+  .visit__grid .row{line-height:1.5;}
+  .visit a{color:var(--cream);}
+  .visit a:hover{color:var(--gold);}
+
+  /* ---------- map ---------- */
+  .map{margin-top:clamp(64px,9vh,110px);position:relative;}
+  .map__frame{position:relative;}
+  .map__frame::after{
+    content:"";position:absolute;inset:0;pointer-events:none;
+    box-shadow:inset 0 0 0 1px var(--gold-soft);
+  }
+  .map iframe{
+    width:100%;height:440px;border:0;display:block;
+    filter:grayscale(1) invert(.92) contrast(.86) brightness(.92) sepia(.18) hue-rotate(5deg);
+  }
+
+  /* ---------- footer ---------- */
+  footer{
+    text-align:center;padding:64px 24px 70px;border-top:1px solid rgba(197,169,126,.16);
+  }
+  .foot__name{font-family:var(--serif);font-size:24px;letter-spacing:.28em;color:var(--gold);padding-left:.28em;}
+  .foot__ig{
+    display:inline-flex;align-items:center;justify-content:center;
+    width:44px;height:44px;margin-top:20px;color:var(--blush);transition:color .4s ease;
+  }
+  .foot__ig:hover{color:var(--gold);}
+  .foot__ig svg{width:21px;height:21px;}
+
+  /* ---------- reveal ---------- */
+  .reveal{opacity:0;transform:translateY(26px);transition:opacity .9s ease, transform .9s cubic-bezier(.2,.7,.2,1);}
+  .reveal.in{opacity:1;transform:none;}
+
+  /* ---------- responsive ---------- */
+  @media(max-width:860px){
+    .wordmark{top:18px;left:22px;font-size:21px;}
+    .langswitch{top:15px;right:18px;gap:8px;}
+    .wrap{padding:0 22px;}
+    .founder{grid-template-columns:1fr;gap:30px;}
+    .founder__media{max-width:480px;margin:0 auto;width:100%;}
+    .founder__media video{
+      -webkit-mask:
+        linear-gradient(to right, transparent 0%, #000 9%, #000 91%, transparent 100%),
+        linear-gradient(to bottom, transparent 0%, #000 8%, #000 92%, transparent 100%);
+      -webkit-mask-composite:source-in;
+      mask:
+        linear-gradient(to right, transparent 0%, #000 9%, #000 91%, transparent 100%),
+        linear-gradient(to bottom, transparent 0%, #000 8%, #000 92%, transparent 100%);
+      mask-composite:intersect;
+    }
+    .founder__media::after{background:linear-gradient(180deg, transparent 60%, var(--black) 100%);}
+    .row-a,.row-b,.row-c{grid-template-columns:1fr;}
+    .nudge,.nudge-lg{margin-top:0;}
+    .film{height:74vh;}
+    .map iframe{height:340px;}
+  }
+  @media(max-width:480px){
+    .hero__name{letter-spacing:.1em;text-indent:.1em;}
+    .rev-track{padding-left:22px;padding-right:22px;}
+  }
+  @media(prefers-reduced-motion:reduce){
+    html{scroll-behavior:auto;}
+    .reveal{transition:none;opacity:1;transform:none;}
+  }
+</style>
+</head>
+<body>
+
+  <a href="#top" class="wordmark" id="wordmark" aria-label="Back to top">Loanna</a>
+
+  <div class="langswitch" role="group" aria-label="Language">
+    <button type="button" class="lang-btn is-active" data-lang="en" aria-pressed="true">EN</button>
+    <span class="lang-div" aria-hidden="true"></span>
+    <button type="button" class="lang-btn" data-lang="de" aria-pressed="false">DE</button>
+  </div>
+
+  <!-- ============ HERO ============ -->
+  <header class="hero" id="top" data-screen-label="Hero">
+    <video class="hero__bg" id="heroBg" src="assets/film-1.mp4" autoplay muted loop playsinline preload="auto"></video>
+    <div class="hero__scrim"></div>
+    <div class="hero__inner">
+      <h1 class="display hero__name">Loanna</h1>
+      <hr class="rule hero__rule">
+      <div class="hero__meta" data-i18n="heroMeta">Bakery &middot; Patisserie &middot; Leipzig</div>
+      <div class="hero__seal"><span class="star">&#9733;</span> <span data-i18n="heroSeal">4.8 on Google &middot; 147 Reviews</span></div>
+    </div>
+    <a href="#founder" class="hero__cta"><span data-i18n="heroCta">Visit Us</span> <span class="arrow">&#8595;</span></a>
+  </header>
+
+  <!-- ============ FOUNDER ============ -->
+  <section class="founder-sec pad" id="founder" data-screen-label="The Founder">
+    <div class="wrap founder">
+      <div class="founder__media reveal">
+        <video src="assets/film-2.mp4" autoplay muted loop playsinline preload="metadata"></video>
+        <span class="frame__tag" data-i18n="founderTag">Before dawn</span>
+      </div>
+      <div class="founder__body reveal">
+        <span class="eyebrow" data-i18n="founderEyebrow">The Founder</span>
+        <h2 class="display founder__title" data-i18n="founderTitle">Named after <em>herself</em>, because there was no other way to name it.</h2>
+        <div class="prose">
+          <p data-i18n="founderP1">Loanna grew up in Athens, in a family where the kitchen was the center of everything. Her grandmother made phyllo by hand on Sunday mornings; her mother kept a jar of honey on every table. She studied pastry in Thessaloniki, then spent years working in professional kitchens across Europe — learning lamination in Lyon, sugar work in Vienna, the patience that only comes from doing the same thing five hundred times until it&rsquo;s right.</p>
+          <p data-i18n="founderP2">She chose Leipzig because it was real. Not fashionable, not saturated, not performing. A city that still had space for something genuine. She opened Loanna with a single rule: nothing leaves the kitchen that isn&rsquo;t right.</p>
+          <p data-i18n="founderP3">Every morning starts before dawn. The croissants are laminated by hand. The cakes are assembled like architecture. The rest is in the taste.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ VITRINE ============ -->
+  <section class="vitrine pad" id="vitrine" data-screen-label="The Vitrine">
+    <div class="wrap">
+      <div class="vitrine__head reveal">
+        <span class="eyebrow" data-i18n="vitrineEyebrow">The Vitrine</span>
+        <div class="display vitrine__title">Ce Matin</div>
+      </div>
+
+      <div class="gallery">
+        <div class="grow row-a">
+          <figure class="tile ar34 reveal">
+            <img src="assets/cake-green.png" alt="Tiered cake with white roses and a moss-green centre tier" loading="lazy">
+            <figcaption class="cap">Gâteau aux roses</figcaption>
+          </figure>
+          <figure class="tile ar1610 reveal nudge">
+            <img src="assets/vitrine.png" alt="The patisserie vitrine, filled for the morning" loading="lazy">
+            <figcaption class="cap">La vitrine</figcaption>
+          </figure>
+        </div>
+
+        <div class="grow row-b">
+          <figure class="tile ar811 reveal">
+            <video src="assets/film-3.mp4" autoplay muted loop playsinline preload="metadata"></video>
+            <figcaption class="cap">À la main</figcaption>
+          </figure>
+          <figure class="tile ar34 reveal nudge">
+            <img src="assets/cake-white.png" alt="Four-tier ivory cake with cascading white roses" loading="lazy">
+            <figcaption class="cap">Gâteau de mariage</figcaption>
+          </figure>
+          <figure class="tile ar45 reveal nudge-lg">
+            <img src="assets/cake-blush.png" alt="Blush two-tier cake with pearls and peonies" loading="lazy">
+            <figcaption class="cap">Gâteau aux pivoines</figcaption>
+          </figure>
+        </div>
+
+        <div class="grow row-c">
+          <figure class="tile ar34 reveal">
+            <img src="assets/cake-drip.png" alt="Cake finished with fruit and chocolate" loading="lazy">
+            <figcaption class="cap">Sur commande</figcaption>
+          </figure>
+          <figure class="tile ar45 reveal nudge">
+            <video src="assets/film-1.mp4" autoplay muted loop playsinline preload="metadata"></video>
+            <figcaption class="cap">Ce matin</figcaption>
+          </figure>
+        </div>
+      </div>
+
+      <p class="vitrine__note reveal" data-i18n="vitrineNote">Our selection changes every morning. Follow <a class="ulink" href="https://instagram.com/loannabakerypatisserie" target="_blank" rel="noopener noreferrer">@loannabakerypatisserie</a> for today&rsquo;s vitrine.</p>
+    </div>
+  </section>
+
+  <!-- ============ FILM INTERLUDE ============ -->
+  <section class="film" aria-hidden="true" data-screen-label="Film">
+    <video src="assets/film-1.mp4" autoplay muted loop playsinline preload="metadata"></video>
+    <div class="film__scrim"></div>
+    <div class="film__cap reveal">
+      <span class="eyebrow" data-i18n="filmEyebrow">In the kitchen</span>
+      <p data-i18n="filmCap">Assembled like architecture.</p>
+    </div>
+  </section>
+
+  <!-- ============ CRAFT ============ -->
+  <section class="craft pad" data-screen-label="The Craft">
+    <div class="wrap">
+      <div class="craft__lines reveal" data-i18n="craftLines">
+        Laminated by hand.<br>
+        Baked before dawn.<br>
+        Gone by noon.
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ REVIEWS ============ -->
+  <section class="reviews pad" data-screen-label="Reviews">
+    <span class="eyebrow reveal">Ce qu&rsquo;on en dit</span>
+    <div class="rev-track" id="revTrack">
+      <blockquote class="quote">
+        <p><span class="mark">&ldquo;</span>Die Konditorei überzeugt mit unglaublich leckeren, handwerklich perfekt gemachten Kuchen und Torten. Alles schmeckt frisch, hochwertig und mit viel Liebe zum Detail.<span class="mark">&rdquo;</span></p>
+        <span class="who">Ioanna</span>
+      </blockquote>
+      <blockquote class="quote">
+        <p><span class="mark">&ldquo;</span>Superleckere Kuchen und Torten, alles frisch und mit viel Liebe gemacht. Gemütliche Atmosphäre — komme definitiv wieder.<span class="mark">&rdquo;</span></p>
+        <span class="who">Alexios</span>
+      </blockquote>
+      <blockquote class="quote">
+        <p><span class="mark">&ldquo;</span>Super liebes Familiencafé. Die Kuchen schmecken sehr lecker — und es gibt leider so viel Auswahl.<span class="mark">&rdquo;</span></p>
+        <span class="who">Larissa</span>
+      </blockquote>
+    </div>
+    <div class="rev-hint reveal" data-i18n="revHint">Scroll &rarr;</div>
+  </section>
+
+  <!-- ============ VISIT ============ -->
+  <section class="visit pad" id="visit" data-screen-label="Visit">
+    <div class="wrap">
+      <span class="eyebrow reveal" data-i18n="visitEyebrow">Visit</span>
+      <div class="display visit__name reveal">Am Adler, Leipzig</div>
+      <div class="visit__grid reveal">
+        <div class="row">
+          <span class="lbl" data-i18n="lblAddress">Address</span>
+          Zschochersche Str. 105, 04229 Leipzig
+        </div>
+        <div class="row">
+          <span class="lbl" data-i18n="lblHours">Hours</span>
+          <span data-i18n="valHours">Monday – Saturday &middot; 10:00 – 20:00<br>Sunday &middot; 08:00 – 20:00</span>
+        </div>
+        <div class="row">
+          <span class="lbl" data-i18n="lblTel">Telephone</span>
+          <a href="tel:+4934124841694">+49 341 24841694</a>
+        </div>
+        <div class="row">
+          <span class="lbl" data-i18n="lblInsta">Instagram</span>
+          <a class="ulink" href="https://instagram.com/loannabakerypatisserie" target="_blank" rel="noopener noreferrer">@loannabakerypatisserie</a>
+        </div>
+        <div class="row">
+          <span class="lbl" data-i18n="lblService">Service</span>
+          <span data-i18n="valService">Dine in &amp; takeaway</span>
+        </div>
+      </div>
+
+      <div class="map reveal">
+        <div class="map__frame">
+          <iframe src="https://maps.google.com/maps?q=Loanna+Bakery+Patisserie+Zschochersche+Str+105+04229+Leipzig&output=embed" width="100%" height="440" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade" title="Loanna on the map"></iframe>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ FOOTER ============ -->
+  <footer data-screen-label="Footer">
+    <div class="foot__name">Loanna &middot; Leipzig</div>
+    <a class="foot__ig" href="https://instagram.com/loannabakerypatisserie" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="3" y="3" width="18" height="18" rx="5"></rect>
+        <circle cx="12" cy="12" r="4"></circle>
+        <circle cx="17.4" cy="6.6" r="1" fill="currentColor" stroke="none"></circle>
+      </svg>
+    </a>
+  </footer>
+
+<script>
+  // Wordmark fade-in after hero
+  var wordmark = document.getElementById('wordmark');
+  var hero = document.getElementById('top');
+  var heroObs = new IntersectionObserver(function(entries){
+    entries.forEach(function(e){
+      if(e.isIntersecting){ wordmark.classList.remove('show'); }
+      else { wordmark.classList.add('show'); }
+    });
+  }, {threshold:0, rootMargin:'-72px 0px 0px 0px'});
+  heroObs.observe(hero);
+
+  // Scroll reveals
+  var revObs = new IntersectionObserver(function(entries){
+    entries.forEach(function(e){
+      if(e.isIntersecting){ e.target.classList.add('in'); revObs.unobserve(e.target); }
+    });
+  }, {threshold:0.18, rootMargin:'0px 0px -8% 0px'});
+  document.querySelectorAll('.reveal').forEach(function(el){ revObs.observe(el); });
+
+  // Subtle hero parallax
+  var heroBg = document.getElementById('heroBg');
+  var ticking = false;
+  function onScroll(){
+    if(ticking) return;
+    ticking = true;
+    requestAnimationFrame(function(){
+      var y = window.scrollY;
+      if(y < window.innerHeight){
+        heroBg.style.transform = 'translateY(' + (y * 0.18) + 'px) scale(1.02)';
+      }
+      ticking = false;
+    });
+  }
+  if(!window.matchMedia('(prefers-reduced-motion: reduce)').matches){
+    window.addEventListener('scroll', onScroll, {passive:true});
+  }
+</script>
+
+<script>
+  (function(){
+    var I18N = {
+      en:{
+        heroMeta:'Bakery &middot; Patisserie &middot; Leipzig',
+        heroSeal:'4.8 on Google &middot; 147 Reviews',
+        heroCta:'Visit Us',
+        founderEyebrow:'The Founder',
+        founderTitle:'Named after <em>herself</em>, because there was no other way to name it.',
+        founderP1:'Loanna grew up in Athens, in a family where the kitchen was the center of everything. Her grandmother made phyllo by hand on Sunday mornings; her mother kept a jar of honey on every table. She studied pastry in Thessaloniki, then spent years working in professional kitchens across Europe \u2014 learning lamination in Lyon, sugar work in Vienna, the patience that only comes from doing the same thing five hundred times until it&rsquo;s right.',
+        founderP2:'She chose Leipzig because it was real. Not fashionable, not saturated, not performing. A city that still had space for something genuine. She opened Loanna with a single rule: nothing leaves the kitchen that isn&rsquo;t right.',
+        founderP3:'Every morning starts before dawn. The croissants are laminated by hand. The cakes are assembled like architecture. The rest is in the taste.',
+        founderTag:'Before dawn',
+        vitrineEyebrow:'The Vitrine',
+        vitrineNote:'Our selection changes every morning. Follow <a class="ulink" href="https://instagram.com/loannabakerypatisserie" target="_blank" rel="noopener noreferrer">@loannabakerypatisserie</a> for today&rsquo;s vitrine.',
+        filmEyebrow:'In the kitchen',
+        filmCap:'Assembled like architecture.',
+        craftLines:'Laminated by hand.<br>Baked before dawn.<br>Gone by noon.',
+        revHint:'Scroll &rarr;',
+        visitEyebrow:'Visit',
+        lblAddress:'Address',
+        lblHours:'Hours',
+        valHours:'Monday \u2013 Saturday &middot; 10:00 \u2013 20:00<br>Sunday &middot; 08:00 \u2013 20:00',
+        lblTel:'Telephone',
+        lblInsta:'Instagram',
+        lblService:'Service',
+        valService:'Dine in &amp; takeaway',
+        docTitle:'Loanna \u2014 Bakery & Patisserie in Leipzig'
+      },
+      de:{
+        heroMeta:'B\u00e4ckerei &middot; Patisserie &middot; Leipzig',
+        heroSeal:'4,8 auf Google &middot; 147 Rezensionen',
+        heroCta:'Besuchen Sie uns',
+        founderEyebrow:'Die Gr\u00fcnderin',
+        founderTitle:'Nach <em>ihr selbst</em> benannt, weil es keinen anderen Namen geben konnte.',
+        founderP1:'Loanna ist in Athen aufgewachsen, in einer Familie, in der die K\u00fcche der Mittelpunkt von allem war. Ihre Gro\u00dfmutter zog sonntagmorgens Filoteig von Hand; ihre Mutter hatte auf jedem Tisch ein Glas Honig stehen. Sie lernte das Patisserie-Handwerk in Thessaloniki und arbeitete dann jahrelang in Profik\u00fcchen in ganz Europa \u2014 das Tourieren in Lyon, die Zuckerarbeit in Wien, die Geduld, die nur entsteht, wenn man dasselbe f\u00fcnfhundert Mal macht, bis es stimmt.',
+        founderP2:'Sie w\u00e4hlte Leipzig, weil es echt war. Nicht angesagt, nicht \u00fcbers\u00e4ttigt, nicht inszeniert. Eine Stadt, die noch Platz f\u00fcr etwas Echtes hatte. Sie er\u00f6ffnete Loanna mit einer einzigen Regel: Nichts verl\u00e4sst die K\u00fcche, das nicht stimmt.',
+        founderP3:'Jeder Morgen beginnt vor dem Morgengrauen. Die Croissants werden von Hand touriert. Die Torten werden wie Architektur aufgebaut. Der Rest liegt im Geschmack.',
+        founderTag:'Vor dem Morgengrauen',
+        vitrineEyebrow:'Die Vitrine',
+        vitrineNote:'Unsere Auswahl wechselt jeden Morgen. Folgen Sie <a class="ulink" href="https://instagram.com/loannabakerypatisserie" target="_blank" rel="noopener noreferrer">@loannabakerypatisserie</a> f\u00fcr die heutige Vitrine.',
+        filmEyebrow:'In der K\u00fcche',
+        filmCap:'Aufgebaut wie Architektur.',
+        craftLines:'Von Hand touriert.<br>Vor dem Morgengrauen gebacken.<br>Bis Mittag vergriffen.',
+        revHint:'Weiter &rarr;',
+        visitEyebrow:'Besuch',
+        lblAddress:'Adresse',
+        lblHours:'\u00d6ffnungszeiten',
+        valHours:'Montag \u2013 Samstag &middot; 10:00 \u2013 20:00<br>Sonntag &middot; 08:00 \u2013 20:00',
+        lblTel:'Telefon',
+        lblInsta:'Instagram',
+        lblService:'Service',
+        valService:'Vor Ort &amp; zum Mitnehmen',
+        docTitle:'Loanna \u2014 B\u00e4ckerei & Patisserie in Leipzig'
+      }
+    };
+
+    var btns = document.querySelectorAll('.lang-btn');
+
+    function apply(lang){
+      var dict = I18N[lang] || I18N.en;
+      document.querySelectorAll('[data-i18n]').forEach(function(el){
+        var k = el.getAttribute('data-i18n');
+        if(dict[k] != null) el.innerHTML = dict[k];
+      });
+      document.documentElement.lang = lang;
+      if(dict.docTitle) document.title = dict.docTitle;
+      btns.forEach(function(b){
+        var on = b.getAttribute('data-lang') === lang;
+        b.classList.toggle('is-active', on);
+        b.setAttribute('aria-pressed', on ? 'true' : 'false');
+      });
+    }
+
+    var saved = null;
+    try{ saved = localStorage.getItem('loanna-lang'); }catch(e){}
+    apply(saved === 'de' ? 'de' : 'en');
+
+    btns.forEach(function(b){
+      b.addEventListener('click', function(){
+        var l = b.getAttribute('data-lang');
+        apply(l);
+        try{ localStorage.setItem('loanna-lang', l); }catch(e){}
+      });
+    });
+  })();
+</script>
+</body>
+</html>
