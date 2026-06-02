@@ -35,7 +35,7 @@
     font-weight:300;
     line-height:1.6;
     -webkit-font-smoothing:antialiased;
-    overflow-x:hidden;
+    overflow-x:clip;
   }
   ::selection{background:var(--gold);color:var(--black);}
   img,video{display:block;max-width:100%;}
@@ -99,7 +99,7 @@
 
   /* ---------- hero ---------- */
   .hero{
-    position:relative;
+    position:sticky;top:0;z-index:0;
     height:100svh;min-height:620px;
     display:flex;flex-direction:column;
     align-items:center;justify-content:center;
@@ -117,8 +117,9 @@
   .hero__scrim{
     position:absolute;inset:0;z-index:1;
     background:
-      radial-gradient(125% 95% at 50% 44%, transparent 0%, rgba(14,12,10,.28) 55%, rgba(14,12,10,.86) 100%),
-      linear-gradient(180deg, rgba(14,12,10,.74) 0%, rgba(14,12,10,.20) 32%, rgba(14,12,10,.26) 62%, rgba(14,12,10,.9) 100%);
+      radial-gradient(92% 62% at 50% 61%, rgba(197,169,126,.15) 0%, rgba(120,86,52,.10) 26%, transparent 60%),
+      radial-gradient(125% 95% at 50% 44%, transparent 0%, rgba(14,12,10,.30) 55%, rgba(14,12,10,.88) 100%),
+      linear-gradient(180deg, rgba(14,12,10,.74) 0%, rgba(14,12,10,.20) 32%, rgba(14,12,10,.26) 62%, rgba(14,12,10,.92) 100%);
   }
   .hero__inner{position:relative;z-index:2;padding:0 24px;display:flex;flex-direction:column;align-items:center;}
   .hero__name{
@@ -178,17 +179,19 @@
     filter:brightness(.86) contrast(1.05) saturate(.9);
     background:var(--black);
     -webkit-mask:
-      linear-gradient(to right, transparent 0%, #000 13%, #000 72%, transparent 100%),
-      linear-gradient(to bottom, transparent 0%, #000 12%, #000 88%, transparent 100%);
+      linear-gradient(to right, transparent 0%, #000 22%, #000 58%, transparent 100%),
+      linear-gradient(to bottom, transparent 0%, #000 22%, #000 78%, transparent 100%),
+      radial-gradient(125% 120% at 48% 45%, #000 42%, transparent 86%);
     -webkit-mask-composite:source-in;
     mask:
-      linear-gradient(to right, transparent 0%, #000 13%, #000 72%, transparent 100%),
-      linear-gradient(to bottom, transparent 0%, #000 12%, #000 88%, transparent 100%);
+      linear-gradient(to right, transparent 0%, #000 22%, #000 58%, transparent 100%),
+      linear-gradient(to bottom, transparent 0%, #000 22%, #000 78%, transparent 100%),
+      radial-gradient(125% 120% at 48% 45%, #000 42%, transparent 86%);
     mask-composite:intersect;
   }
   .founder__media::after{
     content:"";position:absolute;inset:0;pointer-events:none;
-    background:linear-gradient(105deg, transparent 38%, rgba(14,12,10,.55) 78%, var(--black) 100%);
+    background:linear-gradient(105deg, transparent 30%, rgba(14,12,10,.45) 72%, var(--black) 100%);
   }
   .frame{position:relative;}
   .frame::after{
@@ -370,12 +373,14 @@
     .founder__media{max-width:480px;margin:0 auto;width:100%;}
     .founder__media video{
       -webkit-mask:
-        linear-gradient(to right, transparent 0%, #000 9%, #000 91%, transparent 100%),
-        linear-gradient(to bottom, transparent 0%, #000 8%, #000 92%, transparent 100%);
+        linear-gradient(to right, transparent 0%, #000 16%, #000 84%, transparent 100%),
+        linear-gradient(to bottom, transparent 0%, #000 15%, #000 85%, transparent 100%),
+        radial-gradient(120% 120% at 50% 46%, #000 46%, transparent 88%);
       -webkit-mask-composite:source-in;
       mask:
-        linear-gradient(to right, transparent 0%, #000 9%, #000 91%, transparent 100%),
-        linear-gradient(to bottom, transparent 0%, #000 8%, #000 92%, transparent 100%);
+        linear-gradient(to right, transparent 0%, #000 16%, #000 84%, transparent 100%),
+        linear-gradient(to bottom, transparent 0%, #000 15%, #000 85%, transparent 100%),
+        radial-gradient(120% 120% at 50% 46%, #000 46%, transparent 88%);
       mask-composite:intersect;
     }
     .founder__media::after{background:linear-gradient(180deg, transparent 60%, var(--black) 100%);}
@@ -392,6 +397,131 @@
     html{scroll-behavior:auto;}
     .reveal{transition:none;opacity:1;transform:none;}
   }
+
+  /* ====================================================
+     ATMOSPHERE + HERO SCROLL EFFECTS  (added)
+     ==================================================== */
+  @property --p { syntax:'<number>'; inherits:true; initial-value:0; }
+  @keyframes heroProg { from{--p:0;} to{--p:1;} }
+
+  /* opaque content plane that rises over the pinned hero */
+  .page{ position:relative; z-index:1; background:var(--black); }
+
+  /* layered atmospheric gradient: warm bloom up top, deepening to espresso-black */
+  .bg-atmosphere{
+    position:absolute; top:0; left:0; right:0; height:165vh; z-index:0; pointer-events:none;
+    background:
+      radial-gradient(125% 78% at 50% 13%, rgba(197,169,126,.10) 0%, rgba(150,108,66,.07) 26%, transparent 56%),
+      radial-gradient(82% 44% at 50% 3%, rgba(58,42,28,.50) 0%, transparent 62%),
+      linear-gradient(180deg, #17110A 0%, #120E0A 30%, #0E0C0A 64%, #0E0C0A 100%);
+  }
+  /* faint film grain to add depth + kill banding */
+  .bg-grain{
+    position:fixed; inset:0; z-index:0; pointer-events:none;
+    opacity:.05; mix-blend-mode:multiply;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    background-size:200px 200px;
+  }
+
+  /* black overlay used by the deepen-to-black / darken effects */
+  .hero__black{ position:absolute; inset:0; z-index:5; background:#000; opacity:0; pointer-events:none; }
+
+  /* PREFER native CSS scroll-driven progress; JS sets --p only as a fallback */
+  @supports (animation-timeline: scroll()){
+    @media (prefers-reduced-motion:no-preference){
+      html{ animation:heroProg linear both; animation-timeline:scroll(root); animation-range:0 100vh; }
+    }
+  }
+
+  @media (prefers-reduced-motion:no-preference){
+    /* hero — rack-focus blur as it scrolls out (driven by --p over the first viewport) */
+    .hero__bg,
+    .hero__scrim,
+    .hero__inner{ filter:blur(calc(var(--p) * 12px)); }
+    .hero__cta{ opacity:calc(1 - var(--p)); }
+    .hero__black{ opacity:calc(var(--p) * 0.5); }
+  }
+  /* keep mobile light */
+  @media (max-width:860px) and (prefers-reduced-motion:no-preference){
+    .hero__bg,
+    .hero__scrim,
+    .hero__inner{ filter:blur(calc(var(--p) * 7px)); }
+  }
+
+  /* ---- per-section rack-focus: sharp while in view, blur + dim as it exits the top ---- */
+  .blurz{ --mb:9px; }
+  @keyframes blurExit{
+    0%, 70% { filter:blur(0px); opacity:1; }
+    100%    { filter:blur(var(--mb)); opacity:.55; }
+  }
+  @media (prefers-reduced-motion:no-preference){
+    @supports (animation-timeline: view()){
+      .blurz{
+        animation:blurExit linear both;
+        animation-timeline:view();
+        animation-range:cover 0% cover 100%;
+      }
+    }
+  }
+  @media (max-width:860px){ .blurz{ --mb:5px; } }
+
+  /* ---------- custom-cake CTA (vitrine) ---------- */
+  .cake-cta{
+    text-align:center;
+    margin-top:clamp(50px,7vh,88px);
+    padding-top:clamp(42px,6vh,72px);
+    border-top:1px solid rgba(197,169,126,.16);
+  }
+  .cake-cta .eyebrow{ display:block; margin-bottom:18px; }
+  .cake-cta__line{
+    font-family:var(--serif); font-style:italic; font-weight:400;
+    font-size:clamp(25px,3.2vw,42px); color:var(--cream); line-height:1.22;
+    margin:0 auto 30px; max-width:22ch; text-wrap:pretty;
+  }
+  .cake-cta__actions{ display:flex; flex-direction:column; align-items:center; gap:15px; }
+  .btn-wa{
+    display:inline-flex; align-items:center; gap:11px;
+    padding:14px 30px; min-height:48px;
+    border:1px solid var(--gold); border-radius:999px;
+    color:var(--cream); font-family:var(--sans);
+    font-size:12px; letter-spacing:.24em; text-transform:uppercase; line-height:1;
+    transition:background .4s ease, color .4s ease;
+  }
+  .btn-wa svg{ width:18px; height:18px; color:var(--gold); transition:color .4s ease; }
+  .btn-wa:hover{ background:var(--gold); color:var(--black); }
+  .btn-wa:hover svg{ color:var(--black); }
+  .btn-tel{
+    font-family:var(--sans); font-size:11px; letter-spacing:.22em; text-transform:uppercase;
+    color:var(--char); transition:color .35s ease;
+  }
+  .btn-tel:hover{ color:var(--gold); }
+  .btn-tel strong{ color:var(--blush); font-weight:400; }
+
+  /* ---------- mobile sticky action bar (≤768px only) ---------- */
+  .mbar{ display:none; }
+  @media (max-width:768px){
+    .mbar{
+      display:flex; position:fixed; left:0; right:0; bottom:0; z-index:70;
+      background:rgba(20,16,12,.82);
+      backdrop-filter:blur(14px) saturate(1.1); -webkit-backdrop-filter:blur(14px) saturate(1.1);
+      border-top:1px solid rgba(197,169,126,.24);
+      padding-bottom:env(safe-area-inset-bottom);
+    }
+    .mbar__item{
+      flex:1 1 0; min-height:56px;
+      display:flex; flex-direction:column; align-items:center; justify-content:center; gap:4px;
+      padding:9px 6px;
+      color:var(--cream); font-family:var(--sans);
+      font-size:10px; letter-spacing:.2em; text-transform:uppercase; line-height:1;
+      -webkit-tap-highlight-color:transparent;
+    }
+    .mbar__item + .mbar__item{ border-left:1px solid rgba(197,169,126,.16); }
+    .mbar__item svg{ width:20px; height:20px; color:var(--gold); }
+    .mbar__item:active{ background:rgba(197,169,126,.14); }
+    body{ padding-bottom:calc(56px + env(safe-area-inset-bottom)); }
+  }
+
+  /* ---------- end ---------- */
 </style>
 </head>
 <body>
@@ -404,10 +534,12 @@
     <button type="button" class="lang-btn" data-lang="de" aria-pressed="false">DE</button>
   </div>
 
+
   <!-- ============ HERO ============ -->
   <header class="hero" id="top" data-screen-label="Hero">
     <video class="hero__bg" id="heroBg" src="assets/film-1.mp4" autoplay muted loop playsinline preload="auto"></video>
     <div class="hero__scrim"></div>
+    <div class="hero__black" aria-hidden="true"></div>
     <div class="hero__inner">
       <h1 class="display hero__name">Loanna</h1>
       <hr class="rule hero__rule">
@@ -417,8 +549,12 @@
     <a href="#founder" class="hero__cta"><span data-i18n="heroCta">Visit Us</span> <span class="arrow">&#8595;</span></a>
   </header>
 
+  <main class="page">
+  <div class="bg-atmosphere" aria-hidden="true"></div>
+  <div class="bg-grain" aria-hidden="true"></div>
+
   <!-- ============ FOUNDER ============ -->
-  <section class="founder-sec pad" id="founder" data-screen-label="The Founder">
+  <section class="founder-sec pad blurz" id="founder" data-screen-label="The Founder">
     <div class="wrap founder">
       <div class="founder__media reveal">
         <video src="assets/film-2.mp4" autoplay muted loop playsinline preload="metadata"></video>
@@ -439,13 +575,13 @@
   <!-- ============ VITRINE ============ -->
   <section class="vitrine pad" id="vitrine" data-screen-label="The Vitrine">
     <div class="wrap">
-      <div class="vitrine__head reveal">
+      <div class="vitrine__head reveal blurz">
         <span class="eyebrow" data-i18n="vitrineEyebrow">The Vitrine</span>
         <div class="display vitrine__title">Ce Matin</div>
       </div>
 
       <div class="gallery">
-        <div class="grow row-a">
+        <div class="grow row-a blurz">
           <figure class="tile ar34 reveal">
             <img src="assets/cake-green.png" alt="Tiered cake with white roses and a moss-green centre tier" loading="lazy">
             <figcaption class="cap">Gâteau aux roses</figcaption>
@@ -456,7 +592,7 @@
           </figure>
         </div>
 
-        <div class="grow row-b">
+        <div class="grow row-b blurz">
           <figure class="tile ar811 reveal">
             <video src="assets/film-3.mp4" autoplay muted loop playsinline preload="metadata"></video>
             <figcaption class="cap">À la main</figcaption>
@@ -471,7 +607,7 @@
           </figure>
         </div>
 
-        <div class="grow row-c">
+        <div class="grow row-c blurz">
           <figure class="tile ar34 reveal">
             <img src="assets/cake-drip.png" alt="Cake finished with fruit and chocolate" loading="lazy">
             <figcaption class="cap">Sur commande</figcaption>
@@ -483,12 +619,24 @@
         </div>
       </div>
 
-      <p class="vitrine__note reveal" data-i18n="vitrineNote">Our selection changes every morning. Follow <a class="ulink" href="https://instagram.com/loannabakerypatisserie" target="_blank" rel="noopener noreferrer">@loannabakerypatisserie</a> for today&rsquo;s vitrine.</p>
+      <p class="vitrine__note reveal blurz" data-i18n="vitrineNote">Our selection changes every morning. Follow <a class="ulink" href="https://instagram.com/loannabakerypatisserie" target="_blank" rel="noopener noreferrer">@loannabakerypatisserie</a> for today&rsquo;s vitrine.</p>
+
+      <div class="cake-cta reveal blurz">
+        <span class="eyebrow" data-i18n="cakeKicker">By order</span>
+        <p class="cake-cta__line" data-i18n="cakeLine">Custom cakes &mdash; weddings &amp; special occasions</p>
+        <div class="cake-cta__actions">
+          <a class="btn-wa" data-wa href="https://wa.me/49XXXXXXXXXX?text=Hallo%20Loanna%2C%20ich%20interessiere%20mich%20f%C3%BCr%20eine%20Torte%20auf%20Bestellung." target="_blank" rel="noopener noreferrer">
+            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.5 15.3L2 22l4.8-1.5A10 10 0 1 0 12 2zm0 18.2c-1.6 0-3.1-.4-4.4-1.2l-.3-.2-2.9.9.9-2.8-.2-.3A8.2 8.2 0 1 1 12 20.2z"></path><path d="M17.5 14.4c-.3-.2-1.7-.8-2-.9-.3-.1-.5-.2-.7.2-.2.3-.7.9-.9 1.1-.2.2-.3.2-.6.1-.3-.2-1.2-.5-2.3-1.4-.9-.8-1.4-1.7-1.6-2-.2-.3 0-.5.1-.6l.4-.5c.1-.2.2-.3.3-.5.1-.2 0-.4 0-.5 0-.1-.7-1.6-.9-2.2-.2-.6-.5-.5-.7-.5h-.6c-.2 0-.5.1-.8.4-.3.3-1 1-1 2.5s1.1 2.9 1.2 3.1c.2.2 2.1 3.2 5 4.5.7.3 1.3.5 1.7.6.7.2 1.3.2 1.8.1.6-.1 1.7-.7 1.9-1.4.2-.7.2-1.2.2-1.4-.1-.1-.3-.2-.6-.3z"></path></svg>
+            <span data-i18n="cakeBtn">Enquire on WhatsApp</span>
+          </a>
+          <a class="btn-tel" href="tel:+4934124841694"><span data-i18n="cakeOrCall">or call</span> <strong>+49 341 24841694</strong></a>
+        </div>
+      </div>
     </div>
   </section>
 
   <!-- ============ FILM INTERLUDE ============ -->
-  <section class="film" aria-hidden="true" data-screen-label="Film">
+  <section class="film blurz" aria-hidden="true" data-screen-label="Film">
     <video src="assets/film-1.mp4" autoplay muted loop playsinline preload="metadata"></video>
     <div class="film__scrim"></div>
     <div class="film__cap reveal">
@@ -498,7 +646,7 @@
   </section>
 
   <!-- ============ CRAFT ============ -->
-  <section class="craft pad" data-screen-label="The Craft">
+  <section class="craft pad blurz" data-screen-label="The Craft">
     <div class="wrap">
       <div class="craft__lines reveal" data-i18n="craftLines">
         Laminated by hand.<br>
@@ -509,27 +657,35 @@
   </section>
 
   <!-- ============ REVIEWS ============ -->
-  <section class="reviews pad" data-screen-label="Reviews">
+  <section class="reviews pad blurz" data-screen-label="Reviews">
     <span class="eyebrow reveal">Ce qu&rsquo;on en dit</span>
     <div class="rev-track" id="revTrack">
       <blockquote class="quote">
-        <p><span class="mark">&ldquo;</span>Die Konditorei überzeugt mit unglaublich leckeren, handwerklich perfekt gemachten Kuchen und Torten. Alles schmeckt frisch, hochwertig und mit viel Liebe zum Detail.<span class="mark">&rdquo;</span></p>
-        <span class="who">Ioanna</span>
+        <p data-i18n="rev1"><span class="mark">&ldquo;</span>A truly elegant patisserie. From the moment you step in, it feels like a little French salon. The selection of cakes and desserts isn&rsquo;t just beautiful — it&rsquo;s of the highest quality.<span class="mark">&rdquo;</span></p>
+        <span class="who">Massis S.</span>
       </blockquote>
       <blockquote class="quote">
-        <p><span class="mark">&ldquo;</span>Superleckere Kuchen und Torten, alles frisch und mit viel Liebe gemacht. Gemütliche Atmosphäre — komme definitiv wieder.<span class="mark">&rdquo;</span></p>
-        <span class="who">Alexios</span>
+        <p data-i18n="rev2"><span class="mark">&ldquo;</span>A wide selection of high-quality cakes, classic French pâtisserie and a cosy atmosphere — perfect for long afternoons with coffee and cake.<span class="mark">&rdquo;</span></p>
+        <span class="who">Yulia B.</span>
       </blockquote>
       <blockquote class="quote">
-        <p><span class="mark">&ldquo;</span>Super liebes Familiencafé. Die Kuchen schmecken sehr lecker — und es gibt leider so viel Auswahl.<span class="mark">&rdquo;</span></p>
-        <span class="who">Larissa</span>
+        <p data-i18n="rev3"><span class="mark">&ldquo;</span>We ordered custom cupcakes and cakes from Loanna. They were so helpful, even over Instagram, and so warm with their customers. The custom cake met every expectation.<span class="mark">&rdquo;</span></p>
+        <span class="who">Abbas K.</span>
+      </blockquote>
+      <blockquote class="quote">
+        <p data-i18n="rev4"><span class="mark">&ldquo;</span>A wonderful place with exceptional flavours, everything made with love and the kindest staff. It blends German and Greek craft perfectly — flavours that take you somewhere else.<span class="mark">&rdquo;</span></p>
+        <span class="who">Ismini M.</span>
+      </blockquote>
+      <blockquote class="quote">
+        <p data-i18n="rev5"><span class="mark">&ldquo;</span>I&rsquo;ve been ordering cakes here for 8 years and they&rsquo;re always delicious and fresh. Always thrilled — keep it up!<span class="mark">&rdquo;</span></p>
+        <span class="who">Christina P.</span>
       </blockquote>
     </div>
     <div class="rev-hint reveal" data-i18n="revHint">Scroll &rarr;</div>
   </section>
 
   <!-- ============ VISIT ============ -->
-  <section class="visit pad" id="visit" data-screen-label="Visit">
+  <section class="visit pad blurz" id="visit" data-screen-label="Visit">
     <div class="wrap">
       <span class="eyebrow reveal" data-i18n="visitEyebrow">Visit</span>
       <div class="display visit__name reveal">Am Adler, Leipzig</div>
@@ -565,7 +721,7 @@
   </section>
 
   <!-- ============ FOOTER ============ -->
-  <footer data-screen-label="Footer">
+  <footer class="blurz" data-screen-label="Footer">
     <div class="foot__name">Loanna &middot; Leipzig</div>
     <a class="foot__ig" href="https://instagram.com/loannabakerypatisserie" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
@@ -575,44 +731,91 @@
       </svg>
     </a>
   </footer>
+  </main>
+
+  <!-- ============ MOBILE ACTION BAR (≤768px) ============ -->
+  <nav class="mbar" aria-label="Quick actions">
+    <a class="mbar__item" href="tel:+4934124841694">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.3 1.8.6 2.6a2 2 0 0 1-.5 2.1L8.1 9.5a16 16 0 0 0 6 6l1.1-1.1a2 2 0 0 1 2.1-.5c.8.3 1.7.5 2.6.6a2 2 0 0 1 1.7 2z"></path></svg>
+      <span data-i18n="barCall">Call</span>
+    </a>
+    <a class="mbar__item" href="https://www.google.com/maps/dir/?api=1&destination=Zschochersche%20Str.%20105%2C%2004229%20Leipzig" target="_blank" rel="noopener noreferrer">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+      <span data-i18n="barRoute">Directions</span>
+    </a>
+    <a class="mbar__item" data-wa href="https://wa.me/49XXXXXXXXXX?text=Hallo%20Loanna%2C%20ich%20interessiere%20mich%20f%C3%BCr%20eine%20Torte%20auf%20Bestellung." target="_blank" rel="noopener noreferrer">
+      <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.5 15.3L2 22l4.8-1.5A10 10 0 1 0 12 2zm0 18.2c-1.6 0-3.1-.4-4.4-1.2l-.3-.2-2.9.9.9-2.8-.2-.3A8.2 8.2 0 1 1 12 20.2z"></path><path d="M17.5 14.4c-.3-.2-1.7-.8-2-.9-.3-.1-.5-.2-.7.2-.2.3-.7.9-.9 1.1-.2.2-.3.2-.6.1-.3-.2-1.2-.5-2.3-1.4-.9-.8-1.4-1.7-1.6-2-.2-.3 0-.5.1-.6l.4-.5c.1-.2.2-.3.3-.5.1-.2 0-.4 0-.5 0-.1-.7-1.6-.9-2.2-.2-.6-.5-.5-.7-.5h-.6c-.2 0-.5.1-.8.4-.3.3-1 1-1 2.5s1.1 2.9 1.2 3.1c.2.2 2.1 3.2 5 4.5.7.3 1.3.5 1.7.6.7.2 1.3.2 1.8.1.6-.1 1.7-.7 1.9-1.4.2-.7.2-1.2.2-1.4-.1-.1-.3-.2-.6-.3z"></path></svg>
+      <span data-i18n="barWhats">WhatsApp</span>
+    </a>
+  </nav>
 
 <script>
-  // Wordmark fade-in after hero
-  var wordmark = document.getElementById('wordmark');
-  var hero = document.getElementById('top');
-  var heroObs = new IntersectionObserver(function(entries){
-    entries.forEach(function(e){
-      if(e.isIntersecting){ wordmark.classList.remove('show'); }
-      else { wordmark.classList.add('show'); }
-    });
-  }, {threshold:0, rootMargin:'-72px 0px 0px 0px'});
-  heroObs.observe(hero);
+  (function(){
+    var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var root = document.documentElement;
+    var wordmark = document.getElementById('wordmark');
 
-  // Scroll reveals
-  var revObs = new IntersectionObserver(function(entries){
-    entries.forEach(function(e){
-      if(e.isIntersecting){ e.target.classList.add('in'); revObs.unobserve(e.target); }
-    });
-  }, {threshold:0.18, rootMargin:'0px 0px -8% 0px'});
-  document.querySelectorAll('.reveal').forEach(function(el){ revObs.observe(el); });
+    // Scroll reveals
+    var revObs = new IntersectionObserver(function(entries){
+      entries.forEach(function(e){
+        if(e.isIntersecting){ e.target.classList.add('in'); revObs.unobserve(e.target); }
+      });
+    }, {threshold:0.18, rootMargin:'0px 0px -8% 0px'});
+    document.querySelectorAll('.reveal').forEach(function(el){ revObs.observe(el); });
 
-  // Subtle hero parallax
-  var heroBg = document.getElementById('heroBg');
-  var ticking = false;
-  function onScroll(){
-    if(ticking) return;
-    ticking = true;
-    requestAnimationFrame(function(){
-      var y = window.scrollY;
-      if(y < window.innerHeight){
-        heroBg.style.transform = 'translateY(' + (y * 0.18) + 'px) scale(1.02)';
+    // Wordmark fades in once the hero is scrolled past
+    function updMark(){
+      if(window.scrollY > window.innerHeight * 0.55){ wordmark.classList.add('show'); }
+      else { wordmark.classList.remove('show'); }
+    }
+
+    // Hero scroll progress: prefer native CSS scroll-driven animation;
+    // fall back to a lightweight rAF loop that drives the same --p variable.
+    var cssScroll = !!(window.CSS && CSS.supports && CSS.supports('animation-timeline: scroll()'));
+    var cssView   = !!(window.CSS && CSS.supports && CSS.supports('animation-timeline: view()'));
+    var needHeroJS = !cssScroll && !reduced;
+    var needSectionJS = !cssView && !reduced;
+
+    function setP(){
+      var vh = window.innerHeight || 1;
+      var p = window.scrollY / vh;
+      p = p < 0 ? 0 : (p > 1 ? 1 : p);
+      root.style.setProperty('--p', p.toFixed(4));
+    }
+
+    // Per-section rack-focus fallback: sharp while in view, blur + dim as it exits the top.
+    var blurz = needSectionJS ? [].slice.call(document.querySelectorAll('.blurz')) : [];
+    function updSections(){
+      var vh = window.innerHeight || 1;
+      var maxBlur = window.matchMedia('(max-width:860px)').matches ? 5 : 9;
+      for(var i=0;i<blurz.length;i++){
+        var el = blurz[i];
+        var r = el.getBoundingClientRect();
+        var p = (vh * 0.6 - r.bottom) / (vh * 0.6); // ramps as the bottom edge nears the top
+        p = p < 0 ? 0 : (p > 1 ? 1 : p);
+        if(p <= 0){ el.style.filter=''; el.style.opacity=''; }
+        else { el.style.filter = 'blur(' + (p*maxBlur).toFixed(2) + 'px)'; el.style.opacity = (1 - p*0.45).toFixed(3); }
       }
-      ticking = false;
-    });
-  }
-  if(!window.matchMedia('(prefers-reduced-motion: reduce)').matches){
+    }
+
+    var ticking = false;
+    function onScroll(){
+      if(ticking) return;
+      ticking = true;
+      requestAnimationFrame(function(){
+        if(needHeroJS) setP();
+        if(needSectionJS) updSections();
+        updMark();
+        ticking = false;
+      });
+    }
     window.addEventListener('scroll', onScroll, {passive:true});
-  }
+    window.addEventListener('resize', function(){ if(needHeroJS) setP(); if(needSectionJS) updSections(); }, {passive:true});
+
+    if(needHeroJS) setP();
+    if(needSectionJS) updSections();
+    updMark();
+  })();
 </script>
 
 <script>
@@ -633,6 +836,11 @@
         filmEyebrow:'In the kitchen',
         filmCap:'Assembled like architecture.',
         craftLines:'Laminated by hand.<br>Baked before dawn.<br>Gone by noon.',
+        rev1:'<span class="mark">&ldquo;</span>A truly elegant patisserie. From the moment you step in, it feels like a little French salon. The selection of cakes and desserts isn&rsquo;t just beautiful — it&rsquo;s of the highest quality.<span class="mark">&rdquo;</span>',
+        rev2:'<span class="mark">&ldquo;</span>A wide selection of high-quality cakes, classic French pâtisserie and a cosy atmosphere — perfect for long afternoons with coffee and cake.<span class="mark">&rdquo;</span>',
+        rev3:'<span class="mark">&ldquo;</span>We ordered custom cupcakes and cakes from Loanna. They were so helpful, even over Instagram, and so warm with their customers. The custom cake met every expectation.<span class="mark">&rdquo;</span>',
+        rev4:'<span class="mark">&ldquo;</span>A wonderful place with exceptional flavours, everything made with love and the kindest staff. It blends German and Greek craft perfectly — flavours that take you somewhere else.<span class="mark">&rdquo;</span>',
+        rev5:'<span class="mark">&ldquo;</span>I&rsquo;ve been ordering cakes here for 8 years and they&rsquo;re always delicious and fresh. Always thrilled — keep it up!<span class="mark">&rdquo;</span>',
         revHint:'Scroll &rarr;',
         visitEyebrow:'Visit',
         lblAddress:'Address',
@@ -642,6 +850,14 @@
         lblInsta:'Instagram',
         lblService:'Service',
         valService:'Dine in &amp; takeaway',
+        cakeKicker:'By order',
+        cakeLine:'Custom cakes &mdash; weddings &amp; special occasions',
+        cakeBtn:'Enquire on WhatsApp',
+        cakeOrCall:'or call',
+        barCall:'Call',
+        barRoute:'Directions',
+        barWhats:'WhatsApp',
+        waMsg:"Hello Loanna, I'm interested in a custom cake order.",
         docTitle:'Loanna \u2014 Bakery & Patisserie in Leipzig'
       },
       de:{
@@ -659,6 +875,11 @@
         filmEyebrow:'In der K\u00fcche',
         filmCap:'Aufgebaut wie Architektur.',
         craftLines:'Von Hand touriert.<br>Vor dem Morgengrauen gebacken.<br>Bis Mittag vergriffen.',
+        rev1:'<span class="mark">&ldquo;</span>Eine wirklich elegante Konditorei. Vom ersten Moment an fühlt man sich wie in einem kleinen französischen Salon. Die Auswahl an Torten und Desserts ist nicht nur schön anzusehen, sondern von höchster Qualität.<span class="mark">&rdquo;</span>',
+        rev2:'<span class="mark">&ldquo;</span>Große Auswahl an hochwertigen Torten, klassische französische Patisserie und eine gemütliche Atmosphäre — perfekt für lange Nachmittage bei Kaffee und Kuchen.<span class="mark">&rdquo;</span>',
+        rev3:'<span class="mark">&ldquo;</span>Wir haben individuelle Cupcakes und Torten bei Loanna bestellt. Sie waren super hilfsbereit, auch über Instagram, und sehr herzlich. Die Torte hat alle Erwartungen erfüllt.<span class="mark">&rdquo;</span>',
+        rev4:'<span class="mark">&ldquo;</span>Ein wunderbarer Ort mit außergewöhnlichen Aromen, alles mit Liebe gemacht und das freundlichste Personal. Eine perfekte Verbindung aus deutschem und griechischem Handwerk.<span class="mark">&rdquo;</span>',
+        rev5:'<span class="mark">&ldquo;</span>Ich bestelle hier seit 8 Jahren Torten und sie sind immer köstlich und frisch. Immer begeistert — weiter so!<span class="mark">&rdquo;</span>',
         revHint:'Weiter &rarr;',
         visitEyebrow:'Besuch',
         lblAddress:'Adresse',
@@ -668,6 +889,14 @@
         lblInsta:'Instagram',
         lblService:'Service',
         valService:'Vor Ort &amp; zum Mitnehmen',
+        cakeKicker:'Auf Bestellung',
+        cakeLine:'Torten auf Bestellung &mdash; Hochzeiten &amp; besondere Anl\u00e4sse',
+        cakeBtn:'Auf WhatsApp anfragen',
+        cakeOrCall:'oder anrufen',
+        barCall:'Anrufen',
+        barRoute:'Route',
+        barWhats:'WhatsApp',
+        waMsg:'Hallo Loanna, ich interessiere mich f\u00fcr eine Torte auf Bestellung.',
         docTitle:'Loanna \u2014 B\u00e4ckerei & Patisserie in Leipzig'
       }
     };
@@ -682,6 +911,10 @@
       });
       document.documentElement.lang = lang;
       if(dict.docTitle) document.title = dict.docTitle;
+      var waMsg = dict.waMsg || '';
+      document.querySelectorAll('[data-wa]').forEach(function(a){
+        a.setAttribute('href', 'https://wa.me/49XXXXXXXXXX?text=' + encodeURIComponent(waMsg));
+      });
       btns.forEach(function(b){
         var on = b.getAttribute('data-lang') === lang;
         b.classList.toggle('is-active', on);
